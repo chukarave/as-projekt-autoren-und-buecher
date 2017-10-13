@@ -1,6 +1,7 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Projekt_3_Schichten_Architektur
 		public Datenbankhaltung()
 		{
 			FbConnectionStringBuilder connectionString = new FbConnectionStringBuilder();
-			connectionString.Database = Environment.CurrentDirectory + "Datenbank.fdb";
+			connectionString.Database = Environment.CurrentDirectory + "\\Datenbank\\AUTORENBUECHER.FDB";
 			connectionString.Password = " ";
 			connectionString.UserID = "sysdba";
 			connectionString.ServerType = FbServerType.Embedded;
@@ -43,10 +44,40 @@ namespace Projekt_3_Schichten_Architektur
 
 		public List<Autor> GetAutoren()
 		{
-			throw new NotImplementedException();
+			if (Connection == null)
+				throw new NullReferenceException("Verbindung zur Datenbank fehlgechlagen.");
+
+			if (Connection.State != System.Data.ConnectionState.Open)
+			{
+				try
+				{
+					Connection.Open();
+				}
+				catch
+				{
+					throw new NullReferenceException("Verbindung zur Datenbank fehlgeschlagen.");
+				}
+			}
+
+			string statement = "SELECT * " +
+								"FROM T_Autoren";
+
+			FbCommand reader = new FbCommand(statement);
+			FbDataAdapter adapter = new FbDataAdapter(reader);
+			DataSet Data = new DataSet();
+			adapter.FillSchema(Data, SchemaType.Source);
+			adapter.Fill(Data);
+
+			List<Autor> autoren = new List<Autor>();
+			foreach (DataRow item in Data.Tables[0].Rows)
+			{
+				autoren.Add(new Autor((int)item["Autoren_id"], item["Name"].ToString()));
+			}
+
+			return autoren;
 		}
 
-		public List<Buch> GetBuecher()
+		public List<Buch> GetBuecher(int Autoren_id)
 		{
 			if (Connection == null)
 				throw new NullReferenceException("Verbindung zur Datenbank fehlgechlagen.");
@@ -63,13 +94,23 @@ namespace Projekt_3_Schichten_Architektur
 				}
 			}
 
-			string statement = "SELECT * FROM T_Buecher";
+			string statement = "SELECT * " +
+								"FROM T_Buecher " +
+								"WHERE F_Autoren_id = " + Autoren_id;
 
 			FbCommand reader = new FbCommand(statement);
 			FbDataAdapter adapter = new FbDataAdapter(reader);
-			//this.Data = new DataSet();
-			//adapter.FillSchema(this.Data, SchemaType.Source);
-			//adapter.Fill(this.Data);
+			DataSet Data = new DataSet();
+			adapter.FillSchema(Data, SchemaType.Source);
+			adapter.Fill(Data);
+
+			List<Buch> buecher = new List<Buch>();
+			foreach (DataRow item in Data.Tables[0].Rows)
+			{
+				buecher.Add(new Buch(item["ISBN"].ToString(), item["Titel"].ToString()));
+			}
+
+			return buecher;
 		}
 
 		public void LoescheAutor(int ID)
@@ -113,7 +154,6 @@ namespace Projekt_3_Schichten_Architektur
 			FbCommand writer = null;
 			try
 			{
-
 				writer = new FbCommand();
 				writer.Connection = Connection;
 				writer.Transaction = writer.Connection.BeginTransaction();

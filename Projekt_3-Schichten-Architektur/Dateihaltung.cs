@@ -38,7 +38,7 @@ namespace Projekt_3_Schichten_Architektur
             return Autoren;
         }
 
-        public List<Buch> GetBuecher()
+        public List<Buch> GetBuecher(int Autoren_id)
         {
             List<Buch> Buecher = new List<Buch>();
 
