@@ -10,11 +10,11 @@ namespace Projekt_3_Schichten_Architektur
     {
         List<Autor> GetAutoren();
 
-        List<Buch> GetBuecher();
+        List<Buch> GetBuecher(int Autoren_id);
 
         void SpeichereAutor(string Name);
 
-        void SpeichereBuch(int Autoren_id, string Titel);
+        void SpeichereBuch(int Autoren_id, string ISBN, string Titel);
 
         void LoescheAutor(int ID);
 

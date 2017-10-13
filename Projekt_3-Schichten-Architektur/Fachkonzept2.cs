@@ -8,10 +8,10 @@ namespace Projekt_3_Schichten_Architektur
 {
     public class Fachkonzept2 : IFachkonzept
     {
-        IDatenhaltung IData;
-        public Fachkonzept2(IDatenhaltung _IData)
+        IDatenhaltung Data;
+        public Fachkonzept2(IDatenhaltung Data)
         {
-            this.IData = _IData;
+            this.Data = Data;
         }
 
 		public void AktualisiereAutor(int ID, string Name)
@@ -29,7 +29,7 @@ namespace Projekt_3_Schichten_Architektur
 			throw new NotImplementedException();
 		}
 
-		public List<Buch> GetBuecher()
+		public List<Buch> GetBuecher(int Autoren_id)
 		{
 			throw new NotImplementedException();
 		}
@@ -49,7 +49,7 @@ namespace Projekt_3_Schichten_Architektur
 			throw new NotImplementedException();
 		}
 
-		public void SpeichereBuch(int Autoren_id, string Titel)
+		public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
 		{
 			throw new NotImplementedException();
 		}

@@ -77,7 +77,7 @@ namespace Projekt_3_Schichten_Architektur
 			return autoren;
 		}
 
-		public List<Buch> GetBuecher(int Autoren_id)
+		public List<Buch> GetBuecher(int Autoren_id = 0)
 		{
 			if (Connection == null)
 				throw new NullReferenceException("Verbindung zur Datenbank fehlgechlagen.");
@@ -95,8 +95,10 @@ namespace Projekt_3_Schichten_Architektur
 			}
 
 			string statement = "SELECT * " +
-								"FROM T_Buecher " +
-								"WHERE F_Autoren_id = " + Autoren_id;
+								"FROM T_Buecher ";
+
+			if (Autoren_id >= 0)
+				statement += "WHERE F_Autoren_id = " + Autoren_id;
 
 			FbCommand reader = new FbCommand(statement);
 			FbDataAdapter adapter = new FbDataAdapter(reader);
