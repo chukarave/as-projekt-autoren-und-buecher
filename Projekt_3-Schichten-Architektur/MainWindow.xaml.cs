@@ -20,12 +20,12 @@ namespace Projekt_3_Schichten_Architektur
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(string[] args)
         {
             GUI myGUI;
             TUI myTUI;
 
-            int i = 0;
+            int i = 1;
 
             switch (i)
             {

@@ -64,5 +64,10 @@ namespace Projekt_3_Schichten_Architektur
         {
 
         }
-    }
+
+		public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
