@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Autoren>
+  <Autor>
+    <Autoren_id>1</Autoren_id>
+    <Name>Lee, Harper</Name>
+  </Autor>
+  <Autor>
+    <Autoren_id>2</Autoren_id>
+    <Name>Ruth Ozeki</Name>
+  </Autor>
+  <Autor>
+    <Autoren_id>3</Autoren_id>
+    <Name>Rowling, J. K.</Name>
+  </Autor>
+  <Autor>
+    <Autoren_id>4</Autoren_id>
+    <Name>Morrison, Toni</Name>
+  </Autor>
+</Autoren>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2017.2/system/resharper-host/local/Transient/ReSharperHost/v10/SolutionCaches/_Projekt_3-Schichten-Architektur.440378172.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="Projekt_3-Schichten-Architektur" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="App.xaml" t="Include" />
+        <e p="App.xaml.cs" t="Include" />
+        <e p="Autor.cs" t="Include" />
+        <e p="Buch.cs" t="Include" />
+        <e p="ConsoleManager.cs" t="Include" />
+        <e p="Dateihaltung.cs" t="Include" />
+        <e p="Datenbank" t="Include">
+          <e p="AUTORENBUECHER.FDB" t="Include" />
+          <e p="Skripte" t="Include">
+            <e p="CREATE_TABLES.sql" t="Include" />
+          </e>
+        </e>
+        <e p="Datenbankhaltung.cs" t="Include" />
+        <e p="Fachkonzept1.cs" t="Include" />
+        <e p="Fachkonzept2.cs" t="Include" />
+        <e p="Firebird" t="Include">
+          <e p="FirebirdSql.Data.FirebirdClient.dll" t="Include" />
+          <e p="fbembed.dll" t="Include" />
+          <e p="firebird.msg" t="Include" />
+          <e p="ib_util.dll" t="Include" />
+          <e p="icudt30.dll" t="Include" />
+          <e p="icuin30.dll" t="Include" />
+          <e p="icuuc30.dll" t="Include" />
+        </e>
+        <e p="GUI.xaml" t="Include" />
+        <e p="GUI.xaml.cs" t="Include" />
+        <e p="IDatenhaltung.cs" t="Include" />
+        <e p="IFachkonzept.cs" t="Include" />
+        <e p="MainWindow.xaml" t="Include" />
+        <e p="MainWindow.xaml.cs" t="Include" />
+        <e p="Projekt_3-Schichten-Architektur.csproj" t="IncludeRecursive" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="Resources.Designer.cs" t="Include" />
+          <e p="Resources.resx" t="Include" />
+          <e p="Settings.Designer.cs" t="Include" />
+          <e p="Settings.settings" t="Include" />
+        </e>
+        <e p="TUI.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+      </e>
+      <e p="Projekt_3-Schichten-Architektur.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
