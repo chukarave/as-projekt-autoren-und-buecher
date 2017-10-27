@@ -1,28 +1,51 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Projekt_3_Schichten_Architektur
 {
     public class Dateihaltung : IDatenhaltung
     {
-        XmlDocument xDoc;
+        private static XDocument xDoc;
+        private static string xDocString; 
+        
+        private string _filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
         public Dateihaltung()
         {
-            this.xDoc = new XmlDocument();
-
-            if (File.Exists(System.Environment.CurrentDirectory + "\\Test.xml"))
+           // this.xDoc = new XmlDocument();
+             _filePath = Directory.GetParent(Directory.GetParent(_filePath).FullName).FullName;
+            if (File.Exists(_filePath + @"/autoren.xml"))
             {
-
+                xDoc = XDocument.Load(_filePath + "/autoren.xml");
+                xDocString = xDoc.ToString();
+            }
+            else
+            {
+                throw new FileNotFoundException("The file was not found");
+                
             }
         }
 
         public void AktualisiereAutor(int ID, string Name)
         {
+            var elementZuAendern = xDoc.Elements("Autoren")
+                .Elements("Autor")
+                .Where(x =>
+                {
+                    var autorenId = x.Element("Autoren_id");
+                    return autorenId != null && autorenId.Value == ID.ToString();
+                }).Single();
+            var nameZuAendern= elementZuAendern.Element("Name");
+            if (nameZuAendern != null)
+            {
+                nameZuAendern.Value = Name;
+            }
+            xDoc.Save(_filePath + @"/autoren.xml");
+            Console.WriteLine("Autorname wurde aktualisiert.");
 
         }
 
@@ -33,9 +56,14 @@ namespace Projekt_3_Schichten_Architektur
 
         public List<Autor> GetAutoren()
         {
-            List<Autor> Autoren = new List<Autor>();
-
-            return Autoren;
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Autor>), new XmlRootAttribute("Autoren"));
+            StringReader stringReader = new StringReader(xDocString);
+            List<Autor> autorenList = (List<Autor>) serializer.Deserialize(stringReader);
+            if (autorenList.Count == 0)
+            {
+                Console.WriteLine("Die Autorenliste ist leer");
+            }
+            return autorenList;
         }
 
         public List<Buch> GetBuecher(int Autoren_id)
@@ -65,9 +93,9 @@ namespace Projekt_3_Schichten_Architektur
 
         }
 
-		public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
-		{
-			throw new NotImplementedException();
-		}
-	}
+        public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
