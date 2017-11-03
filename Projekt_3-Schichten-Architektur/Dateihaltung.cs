@@ -6,7 +6,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace Projekt_3_Schichten_Architektur
+namespace AsProject
 {
     public class Dateihaltung : IDatenhaltung
     {
@@ -66,10 +66,18 @@ namespace Projekt_3_Schichten_Architektur
             return autorenList;
         }
 
+		// WIP
         public List<Buch> GetBuecher(int Autoren_id)
         {
-            List<Buch> Buecher = new List<Buch>();
-
+            var Buecher = new List<Buch>();
+            var elementAufZuListen = xDoc.Elements("Autoren")
+                .Elements("Autor")
+                .Where(x =>
+                {
+                    var autorenId = x.Element("Autoren_id");
+                    return autorenId != null && autorenId.Value == Autoren_id.ToString();
+                }).Single();
+            Console.WriteLine(elementAufZuListen);
             return Buecher;
         }
 

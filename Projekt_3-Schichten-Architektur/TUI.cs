@@ -4,17 +4,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Projekt_3_Schichten_Architektur
+namespace AsProject
 {
     public class TUI
     {
         IFachkonzept IF;
+        private bool endProgram = false;
         public TUI(IFachkonzept _IF)
         {
             this.IF = _IF;
          //   ConsoleManager.Toggle();
-            char input;
             Console.CursorVisible = true;
+            while (endProgram == false)
+            {
+                endProgram = ZeigeHauptMenue();
+                if (endProgram)
+                {
+                    Console.WriteLine("Auf Wiedersehen");
+                }
+            }
+                
+        }
+
+        public bool ZeigeHauptMenue()
+        {
+            ZeigeMenue();
+            var auswahl = FragEingabe();
+            if (auswahl != "i") {
+                return Select(auswahl);
+            } else {
+                return true;
+            }
+        }
+
+        public void ZeigeMenue()
+        {
             Console.WriteLine("┌───────────────────────────────────┐");
             Console.WriteLine("│ Autoren & Bücher                  │");
             Console.WriteLine("├───────────────────────────────────┤");
@@ -35,67 +59,183 @@ namespace Projekt_3_Schichten_Architektur
             Console.WriteLine("│ Program beenden               (i) │");
             Console.WriteLine("├───────────────────────────────────┤");
             Console.WriteLine("└───────────────────────────────────┘");
+        }
+
+            // input is a string (and not a char) to avoid user 
+            //confusion due to multiple user input points.
+        public string FragEingabe(string input = "")
+        {
+            if (input != "")
+            {
+                return input;
+            }
             Console.WriteLine("Wählen Sie einen Menüpunkt:       ");
-            input = Console.ReadKey().KeyChar;
-            Select(input);
+            input = Console.ReadLine();
             Console.Read();
+            return input;
+        }
+
+        public string FragWeitereAutorAktion()
+        {
+            Console.WriteLine();
+            Console.WriteLine("┌──────────────────────────────────────┐");
+            Console.WriteLine("│ Autoren Menü                         │");
+            Console.WriteLine("├──────────────────────────────────────┤");
+            Console.WriteLine("│ Autoren hinzufügen               (b) │");
+            Console.WriteLine("│ Autoren bearbeiten               (c) │");
+            Console.WriteLine("│ Autoren entfernen                (d) │");
+            Console.WriteLine("│ -----------------------              │");
+            Console.WriteLine("│ Bücher auflisten nach Autor      (e) │");
+            Console.WriteLine("│ Hauptmenü zeigen                 (m) │");
+            Console.WriteLine("│ Program beenden                  (i) │");
+            Console.WriteLine("├──────────────────────────────────────┤");
+            Console.WriteLine("└──────────────────────────────────────┘");
+            var input = Console.ReadLine();
+            return input;
+        }
+
+        public bool ZeigeAutoren()
+        {
+            Console.WriteLine();
+            var autorenIndex = IF.GetAutoren();
+            if (autorenIndex == null)
+            {
+                Console.WriteLine("Die Autorenliste ist leer");
+            }
+            // Reverse list order
+            autorenIndex.Reverse();
+            foreach (var autor in autorenIndex)
+            {
+                Console.WriteLine(autor.Autoren_id + ". " + autor.Name);
+            }
+            Console.WriteLine();
+            var ret = FragWeitereAutorAktion();
+            switch (ret)
+            {
+                case ("b"):
+                    FuegAutorHinzu();
+                    break;
+                case ("c"):
+                    BearbeiteAutor();
+                    return true;
+                    break;
+                case ("d"):
+                    EntfernAutor();
+                    return true;
+                    break;
+                case ("e"):
+                    BüecherNachAutor();
+                    return true;
+                    break;
+                case ("m"):
+                    ZeigeHauptMenue();
+                    return true;
+                    break;
+                case ("i"):
+                    return false;
+                    break;
+            }
+            return false;
+        }
+
+        public bool BüecherNachAutor()
+        {
+            Console.WriteLine();
+            // List authors as help
+            var autorenList = IF.GetAutoren();
+            foreach (var autor in autorenList) 
+            {
+                Console.WriteLine("ID: " + autor.Autoren_id + " Name: " + autor.Name);
+            }
+            Console.WriteLine("Bitte geben Sie die ID Nummer von einem Autor ein, um Bücher für diesen Autor aufzulisten: ");
+            var id = Convert.ToInt32(Console.ReadLine());
+            IF.GetBuecher(id);
+            return false;
         }
         
-        public void Select(char input)
+        public bool FuegAutorHinzu()
         {
-            var fachkonzept = new Fachkonzept2(new Dateihaltung());
+            Console.WriteLine("Bitte Geben Sie den Autor Name ein: ");
+            var autorName = Console.ReadLine();
+            IF.SpeichereAutor(autorName);
+            return false;
+        }
+
+        public bool BearbeiteAutor()
+        {
+            Console.WriteLine();
+            // List authors as help
+            var autorenList = IF.GetAutoren();
+            foreach (var autor in autorenList) 
+            {
+                Console.WriteLine("ID: " + autor.Autoren_id + " Name: " + autor.Name);
+            }
+            Console.WriteLine("Bitte geben Sie die ID Nummer ein, um den Autor zu bearbeiten: ");
+            var id = Convert.ToInt32(Console.ReadLine());
+            // Enter edited author name and call editing method
+            try
+            {
+                Console.WriteLine("Bitte geben Sie die gewünschte Änderung ein: ");
+                Console.ReadLine();
+                var aktuellerName = Console.ReadLine();
+                if (string.IsNullOrEmpty(aktuellerName))
+                {
+                   BearbeiteAutor();
+                }
+                IF.AktualisiereAutor(id, aktuellerName);
+                return false;
+            }
+            catch (FormatException e)
+            {
+                   BearbeiteAutor();
+            }
+            return false;
+        }
+
+        public bool EntfernAutor()
+        {
+            Console.WriteLine();
+            // List authors as help
+            var autorenList = IF.GetAutoren();
+            foreach (var autor in autorenList) 
+            {
+                Console.WriteLine("ID: " + autor.Autoren_id + " Name: " + autor.Name);
+            }
+            Console.WriteLine("Bitte geben Sie die ID Nummer ein, um den Autor zu entfernen: ");
+            var id = Convert.ToInt32(Console.ReadLine());
+            IF.LoescheAutor(id);
+            return false;
+        }
+
+        public bool Select(string input)
+        {
             switch (input)
             {
-                case ('a'):
-                    Console.WriteLine();
-                    var autorenIndex = fachkonzept.GetAutoren();
-                    if (autorenIndex == null) {
-                        Console.WriteLine("Index is null");
-                }
-                    // Reverse list order
-                    autorenIndex.Reverse();
-                    foreach (var autor in autorenIndex)
-                    {
-                        Console.WriteLine(autor.Autoren_id + ". " + autor.Name);
-                    }
+                case ("a"):
+                    ZeigeAutoren();
                     break;
-                case ('b'):
-                    Console.WriteLine("Bitte Geben Sie den Autor Name ein: ");
-                    var autorName = Console.ReadLine();
-                    fachkonzept.SpeichereAutor(autorName);
+                case ("b"):
+                    FuegAutorHinzu();
                     break;
-                case ('c'):
-                    var autorenList = fachkonzept.GetAutoren();
-                    foreach (var autor in autorenList) 
-                    {
-                        Console.WriteLine("ID: " + autor.Autoren_id + " Name: " + autor.Name);
-                    }
-                    Console.WriteLine("Bitte geben Sie die ID Nummer des gewünschten Autors ein: ");
-                    Console.ReadLine();
-                    var id = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Bitte geben Sie die gewünschte Änderung ein: ");
-                    Console.ReadLine();
-                    var aktuellerName = Console.ReadLine();
-                    if (string.IsNullOrEmpty(aktuellerName))
-                    {
-                        Select('c');
-                    }
-                    fachkonzept.AktualisiereAutor(id, aktuellerName);
+                case ("c"):
+                    BearbeiteAutor();
                     break;
-                case ('d'):
+                case ("d"):
+                    EntfernAutor();
                     break;
-                case ('e'):
+                case ("e"):
                     break;
-                case ('f'):
+                case ("f"):
                     break;
-                case ('g'):
+                case ("g"):
                     break;
-                case ('h'):
+                case ("h"):
                     break;
-                case ('i'):
+                case ("i"):
                     break;
                 
             }
+            return false;
         }
     }
 }
