@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace AsProject
 {
@@ -66,19 +68,23 @@ namespace AsProject
             return autorenList;
         }
 
-		// WIP
         public List<Buch> GetBuecher(int Autoren_id)
         {
-            var Buecher = new List<Buch>();
+            var buecher = new List<Buch>();
             var elementAufZuListen = xDoc.Elements("Autoren")
                 .Elements("Autor")
                 .Where(x =>
                 {
                     var autorenId = x.Element("Autoren_id");
                     return autorenId != null && autorenId.Value == Autoren_id.ToString();
-                }).Single();
-            Console.WriteLine(elementAufZuListen);
-            return Buecher;
+                });
+
+            buecher = elementAufZuListen.Elements("Buecher").Elements("Buch").Select(b => new Buch()
+                {
+                    ISBN = (string)b.Element("ISBN"),
+                    Titel = (string)b.Element("Titel"),
+                }).ToList();
+            return buecher;
         }
 
         public void LoescheAutor(int ID)
