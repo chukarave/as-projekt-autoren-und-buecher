@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Projekt_3_Schichten_Architektur
+namespace AsProject
 {
     public class Fachkonzept2 : IFachkonzept
     {
@@ -32,7 +32,7 @@ namespace Projekt_3_Schichten_Architektur
 
         public List<Buch> GetBuecher(int autorenId)
         {
-            throw new NotImplementedException();
+            return Data.GetBuecher(autorenId);
         }
 
         public void LoescheAutor(int ID)
@@ -75,6 +75,8 @@ namespace Projekt_3_Schichten_Architektur
                     }
                 }
             }
+            // Reverse list order
+            Liste.Reverse();
             return Liste;
         }
     }
