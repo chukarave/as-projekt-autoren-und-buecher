@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsProject
+namespace Projekt_3_Schichten_Architektur
 {
     public class TUI
     {
@@ -102,8 +102,6 @@ namespace AsProject
             {
                 Console.WriteLine("Die Autorenliste ist leer");
             }
-            // Reverse list order
-            autorenIndex.Reverse();
             foreach (var autor in autorenIndex)
             {
                 Console.WriteLine(autor.Autoren_id + ". " + autor.Name);
@@ -117,28 +115,23 @@ namespace AsProject
                     break;
                 case ("c"):
                     BearbeiteAutor();
-                    return true;
                     break;
                 case ("d"):
                     EntfernAutor();
-                    return true;
                     break;
                 case ("e"):
-                    BüecherNachAutor();
-                    return true;
+                    BuecherNachAutor();
                     break;
                 case ("m"):
                     ZeigeHauptMenue();
-                    return true;
                     break;
                 case ("i"):
-                    return false;
-                    break;
+                    return true;
             }
             return false;
         }
 
-        public bool BüecherNachAutor()
+        public bool BuecherNachAutor()
         {
             Console.WriteLine();
             // List authors as help
@@ -148,11 +141,37 @@ namespace AsProject
                 Console.WriteLine("ID: " + autor.Autoren_id + " Name: " + autor.Name);
             }
             Console.WriteLine("Bitte geben Sie die ID Nummer von einem Autor ein, um Bücher für diesen Autor aufzulisten: ");
+            Console.ReadLine();
             var id = Convert.ToInt32(Console.ReadLine());
-            IF.GetBuecher(id);
+            var buecher = IF.GetBuecher(id);
+            foreach (var buch in buecher)
+            {
+                Console.WriteLine("Titel:  " + buch.Titel);
+                Console.WriteLine("ISBN:  " + buch.ISBN);
+            } 
             return false;
         }
         
+        public bool FuegBuchHinzu()
+        {
+            Console.WriteLine();
+            // List authors as help
+            var autorenList = IF.GetAutoren();
+            foreach (var autor in autorenList) 
+            {
+                Console.WriteLine("ID: " + autor.Autoren_id + " Name: " + autor.Name);
+            }
+            Console.WriteLine("Bitte geben Sie die ID Nummer von einem Autor ein, um ein neues Buch für diesen Autor hinzufügen: ");
+            var id = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Bitte Geben Sie den Titel ein: ");
+            var titel = Console.ReadLine();
+            Console.WriteLine("Bitte Geben Sie die ISBN ein: ");
+            Console.ReadLine();
+            var isbn = Console.ReadLine();
+            IF.SpeichereBuch(id, isbn, titel);
+            return false;
+        }
+
         public bool FuegAutorHinzu()
         {
             Console.WriteLine("Bitte Geben Sie den Autor Name ein: ");
@@ -160,7 +179,7 @@ namespace AsProject
             IF.SpeichereAutor(autorName);
             return false;
         }
-
+        
         public bool BearbeiteAutor()
         {
             Console.WriteLine();
@@ -212,7 +231,10 @@ namespace AsProject
             switch (input)
             {
                 case ("a"):
-                    ZeigeAutoren();
+                    if (ZeigeAutoren())
+                    {
+                        return true;
+                    }
                     break;
                 case ("b"):
                     FuegAutorHinzu();
@@ -224,8 +246,10 @@ namespace AsProject
                     EntfernAutor();
                     break;
                 case ("e"):
+                    BuecherNachAutor();
                     break;
                 case ("f"):
+                    FuegBuchHinzu();
                     break;
                 case ("g"):
                     break;
