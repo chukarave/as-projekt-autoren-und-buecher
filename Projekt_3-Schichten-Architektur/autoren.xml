@@ -3,17 +3,57 @@
   <Autor>
     <Autoren_id>1</Autoren_id>
     <Name>Lee, Harper</Name>
+    <Buecher>
+      <Buch>
+        <ISBN>978-3-499-14281-9</ISBN>
+        <Titel>Wer die Nachtigall stört</Titel>
+      </Buch>
+      <Buch>
+        <ISBN>978-3-421-04719-9</ISBN>
+        <Titel>Gehe hin, stelle einen Wächter</Titel>
+      </Buch>
+    </Buecher>
   </Autor>
   <Autor>
     <Autoren_id>2</Autoren_id>
-    <Name>Ruth Ozeki</Name>
+    <Name>Herbert, Frank</Name>
+    <Buecher>
+      <Buch>
+        <ISBN>3-453-18683-4</ISBN>
+        <Titel>Der Wüstenplanet</Titel>
+      </Buch>
+      <Buch>
+        <ISBN>978-3-453-18685-9</ISBN>
+        <Titel>Die Kinder des Wüstenplaneten</Titel>
+      </Buch>
+    </Buecher>
   </Autor>
   <Autor>
     <Autoren_id>3</Autoren_id>
-    <Name>Rowling, J. K.</Name>
+    <Name>Rowling, Joanne</Name>
+    <Buecher>
+      <Buch>
+        <ISBN>978-3-551-55167-2</ISBN>
+        <Titel>Harry Potter und der Stein der Weisen</Titel>
+      </Buch>
+      <Buch>
+        <ISBN>978-3-551-55169-6</ISBN>
+        <Titel>Harry Potter und der Gefangene von Askaban</Titel>
+      </Buch>
+    </Buecher>
   </Autor>
   <Autor>
     <Autoren_id>4</Autoren_id>
-    <Name>Morrison, Toni</Name>
+    <Name>Scalzi, John</Name>
+    <Buecher>
+      <Buch>
+        <ISBN>978-3-453-53399-8</ISBN>
+        <Titel>Der wilde Planet</Titel>
+      </Buch>
+      <Buch>
+        <ISBN>978-3-453-52995-3</ISBN>
+        <Titel>Redshirts</Titel>
+      </Buch>
+    </Buecher>
   </Autor>
 </Autoren>
