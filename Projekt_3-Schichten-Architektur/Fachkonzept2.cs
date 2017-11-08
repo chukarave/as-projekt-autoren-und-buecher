@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsProject
+namespace Projekt_3_Schichten_Architektur
 {
     public class Fachkonzept2 : IFachkonzept
     {
