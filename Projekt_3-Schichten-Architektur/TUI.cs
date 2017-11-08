@@ -117,7 +117,7 @@ namespace Projekt_3_Schichten_Architektur
                     BearbeiteAutor();
                     break;
                 case ("d"):
-                    EntfernAutor();
+                    EntferneAutor();
                     break;
                 case ("e"):
                     BuecherNachAutor();
@@ -175,6 +175,7 @@ namespace Projekt_3_Schichten_Architektur
         public bool FuegAutorHinzu()
         {
             Console.WriteLine("Bitte Geben Sie den Autor Name ein: ");
+            Console.ReadLine();
             var autorName = Console.ReadLine();
             IF.SpeichereAutor(autorName);
             return false;
@@ -211,7 +212,7 @@ namespace Projekt_3_Schichten_Architektur
             return false;
         }
 
-        public bool EntfernAutor()
+        public bool EntferneAutor()
         {
             Console.WriteLine();
             // List authors as help
@@ -223,6 +224,19 @@ namespace Projekt_3_Schichten_Architektur
             Console.WriteLine("Bitte geben Sie die ID Nummer ein, um den Autor zu entfernen: ");
             var id = Convert.ToInt32(Console.ReadLine());
             IF.LoescheAutor(id);
+            return false;
+        }
+
+        public bool EntferneBuch()
+        {
+            var buecher = IF.GetBuecher(0);
+            foreach (var buch in buecher)
+            {
+                Console.WriteLine("ISBN: " + buch.ISBN + "  -  " + buch.Titel);
+            }
+            Console.WriteLine("Bitte geben Sie die ISBN des Buchs zu entfernen: ");
+            var isbn = Console.ReadLine();
+            IF.LoescheBuch(isbn);
             return false;
         }
 
@@ -243,7 +257,7 @@ namespace Projekt_3_Schichten_Architektur
                     BearbeiteAutor();
                     break;
                 case ("d"):
-                    EntfernAutor();
+                    EntferneAutor();
                     break;
                 case ("e"):
                     BuecherNachAutor();
@@ -254,6 +268,7 @@ namespace Projekt_3_Schichten_Architektur
                 case ("g"):
                     break;
                 case ("h"):
+                    EntferneBuch();
                     break;
                 case ("i"):
                     break;
