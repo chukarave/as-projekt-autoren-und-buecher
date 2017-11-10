@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Projekt_3_Schichten_Architektur
 {
@@ -22,7 +18,7 @@ namespace Projekt_3_Schichten_Architektur
 
         public void AktualisiereBuch(string ISBN, string Titel)
         {
-            throw new NotImplementedException();
+            Data.AktualisiereBuch(ISBN, Titel);
         }
 
         public List<Autor> GetAutoren()
@@ -37,22 +33,22 @@ namespace Projekt_3_Schichten_Architektur
 
         public void LoescheAutor(int ID)
         {
-            throw new NotImplementedException();
+            Data.LoescheAutor(ID);
         }
 
         public void LoescheBuch(string ISBN)
         {
-            throw new NotImplementedException();
+            Data.LoescheBuch(ISBN);
         }
 
         public void SpeichereAutor(string Name)
         {
-            throw new NotImplementedException();
+            Data.SpeichereAutor(Name);
         }
 
         public void SpeichereBuch(int autorenId, string ISBN, string Titel)
         {
-            throw new NotImplementedException();
+            Data.SpeichereBuch(autorenId, ISBN, Titel);
         }
         
         private List<Autor> SortiereAutoren(List<Autor> Liste)
