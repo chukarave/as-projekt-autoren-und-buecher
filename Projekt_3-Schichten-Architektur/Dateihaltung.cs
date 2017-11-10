@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Threading;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Serialization;
-using System.Xml.XPath;
 
 namespace Projekt_3_Schichten_Architektur
 {
@@ -21,22 +14,19 @@ namespace Projekt_3_Schichten_Architektur
         private string _filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
         public Dateihaltung()
         {
-             _filePath = Directory.GetParent(Directory.GetParent(_filePath).FullName).FullName;
-            if (File.Exists(_filePath + @"/autoren.xml"))
+             _filePath = Directory.GetParent(Directory.GetParent(_filePath).FullName).FullName + @"/autoren.xml";
+            try
             {
-
-                xDoc = XDocument.Load(_filePath + "/autoren.xml");
-                xDocString = xDoc.ToString();
+                File.Exists(_filePath);
+                xDoc = XDocument.Load(_filePath);
             }
-            else
+            catch (Exception e)
             {
-                throw new FileNotFoundException("The file was not found");
-                
+                throw new FileNotFoundException("Die Datei wurde nicht gefunden.");
             }
-             
         }
 
-        public bool AktualisiereAutor(int ID, string Name)
+        public void AktualisiereAutor(int ID, string Name)
         {
             var elementZuAendern = xDoc.Elements("Autoren")
                 .Elements("Autor")
@@ -50,16 +40,24 @@ namespace Projekt_3_Schichten_Architektur
             {
                 nameZuAendern.Value = Name;
             }
-            xDoc.Save(_filePath + @"/autoren.xml");
-            Console.WriteLine("Autorname wurde aktualisiert.");
-            return true;
-
+            SpeicherXml();
         }
 
-        public bool AktualisiereBuch(string ISBN, string Titel)
+        public void AktualisiereBuch(string ISBN, string Titel)
         {
-            return false;
-           
+            var buchElement = xDoc.Elements("Autoren")
+                .Elements("Autor").Elements("Buecher").Elements("Buch")
+                .Where(x =>
+                {
+                    var buchIsbn = x.Element("ISBN");
+                    return buchIsbn != null && buchIsbn.Value == ISBN;
+                }).Single();
+            var titelZuAendern= buchElement.Element("Titel");
+            if (titelZuAendern != null)
+            {
+                titelZuAendern.Value = Titel;
+            }
+            SpeicherXml();
         }
 
         public List<Autor> GetAutoren()
@@ -103,7 +101,7 @@ namespace Projekt_3_Schichten_Architektur
             return buecher;
         }
 
-        public bool LoescheAutor(int ID)
+        public void LoescheAutor(int ID)
         {
             var elementZuLoeschen = xDoc.Elements("Autoren")
                 .Elements("Autor")
@@ -113,12 +111,11 @@ namespace Projekt_3_Schichten_Architektur
                     return autorenId != null && autorenId.Value == ID.ToString();
                 }).Single();
             elementZuLoeschen.Remove();
-            xDoc.Save(_filePath + @"/autoren.xml");
-            return false;
+            SpeicherXml();
 
         }
 
-        public bool LoescheBuch(string ISBN)
+        public void LoescheBuch(string ISBN)
         {
             var buchElement = xDoc.Elements("Autoren")
                 .Elements("Autor").Elements("Buecher").Elements("Buch")
@@ -129,11 +126,10 @@ namespace Projekt_3_Schichten_Architektur
                 }).Single();
             Console.WriteLine(buchElement);
             buchElement.Remove();
-            xDoc.Save(_filePath + @"/autoren.xml");
-            return false;
+            SpeicherXml();
         }
 
-        public bool SpeichereAutor(string Name)
+        public void SpeichereAutor(string Name)
         {
             XElement autoren = xDoc.Element("Autoren");
             var lastId = xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Last();
@@ -142,13 +138,11 @@ namespace Projekt_3_Schichten_Architektur
                 new XElement("Name", Name),
                 new XElement("Buecher", ""));
            autoren.Add(neuerAutor); 
-           
-            xDoc.Save(_filePath + @"/autoren.xml");
-            
-            return true;
+           SpeicherXml();
+            Console.WriteLine("Der Autor wurde gespeichert.");
         }
 
-        public bool SpeichereBuch(int Autoren_id, string ISBN, string Titel)
+        public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
         {
             var autorElement = xDoc.Elements("Autoren")
                 .Elements("Autor")
@@ -161,10 +155,22 @@ namespace Projekt_3_Schichten_Architektur
                 new XElement("ISBN", ISBN),
                 new XElement("Titel", Titel));
             autorElement.Elements("Buecher").Last().Add(neuesBuch);
-            
-            xDoc.Save(_filePath + @"/autoren.xml");
-            return false;
+            SpeicherXml();
+            Console.WriteLine("Das Buch wurde gespeichert.");
         }
 
+        private void SpeicherXml()
+        {
+            try
+            {
+                xDoc.Save(_filePath);
+            }
+            catch (Exception e)
+            {
+                // rethrow exception as DateihaltungsFehler
+                throw new DatenhaltungsFehler("Die Datei konnte nicht gespeichert werden.");
+            }
+            
+        }
     }
 }
