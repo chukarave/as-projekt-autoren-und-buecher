@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Projekt_3_Schichten_Architektur
 {
@@ -28,11 +24,25 @@ namespace Projekt_3_Schichten_Architektur
 
         public bool ZeigeHauptMenue()
         {
-            ZeigeMenue();
-            var auswahl = FragEingabe();
-            if (auswahl != "i") {
-                return Select(auswahl);
-            } else {
+            try
+            {
+                ZeigeMenue();
+                var auswahl = FragEingabe();
+                if (auswahl != "i") {
+                    return Select(auswahl);
+                } else {
+                    return true;
+                }
+
+            }
+            catch (DatenhaltungsFehler e)
+            {
+                Console.WriteLine("Fehler ist aufgetreten. Programm wird beendet!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unerwarteter Fehler ist aufgetreten. Programm wird beendet!");
                 return true;
             }
         }
@@ -163,10 +173,11 @@ namespace Projekt_3_Schichten_Architektur
             }
             Console.WriteLine("Bitte geben Sie die ID Nummer von einem Autor ein, um ein neues Buch für diesen Autor hinzufügen: ");
             var id = Convert.ToInt32(Console.ReadLine());
+            Console.ReadLine();
             Console.WriteLine("Bitte Geben Sie den Titel ein: ");
             var titel = Console.ReadLine();
-            Console.WriteLine("Bitte Geben Sie die ISBN ein: ");
             Console.ReadLine();
+            Console.WriteLine("Bitte Geben Sie die ISBN ein: ");
             var isbn = Console.ReadLine();
             IF.SpeichereBuch(id, isbn, titel);
             return false;
@@ -203,6 +214,7 @@ namespace Projekt_3_Schichten_Architektur
                    BearbeiteAutor();
                 }
                 IF.AktualisiereAutor(id, aktuellerName);
+                Console.WriteLine("Autorname wurde aktualisiert.");
                 return false;
             }
             catch (FormatException e)
@@ -212,6 +224,22 @@ namespace Projekt_3_Schichten_Architektur
             return false;
         }
 
+        public bool BearbeiteBuch()
+        {
+            var buecher = IF.GetBuecher(0);
+            foreach (var buch in buecher)
+            {
+                Console.WriteLine("ISBN: " + buch.ISBN + "  -  " + buch.Titel);
+            }
+            Console.WriteLine("Bitte geben Sie die ISBN des Buchs zu bearbeiten: ");
+            var isbn = Console.ReadLine();
+            Console.ReadLine();
+            Console.WriteLine("Bitte geben Sie den neuen Buchtitel ein: ");
+            var titel = Console.ReadLine();
+            IF.AktualisiereBuch(isbn, titel);
+            Console.WriteLine("Buchtitel wurde aktualisiert.");
+            return false;
+        }
         public bool EntferneAutor()
         {
             Console.WriteLine();
@@ -224,6 +252,7 @@ namespace Projekt_3_Schichten_Architektur
             Console.WriteLine("Bitte geben Sie die ID Nummer ein, um den Autor zu entfernen: ");
             var id = Convert.ToInt32(Console.ReadLine());
             IF.LoescheAutor(id);
+            Console.WriteLine("Der Autor wurde entfernt.");
             return false;
         }
 
@@ -237,6 +266,7 @@ namespace Projekt_3_Schichten_Architektur
             Console.WriteLine("Bitte geben Sie die ISBN des Buchs zu entfernen: ");
             var isbn = Console.ReadLine();
             IF.LoescheBuch(isbn);
+            Console.WriteLine("Das Buch wurde entfernt.");
             return false;
         }
 
@@ -266,6 +296,7 @@ namespace Projekt_3_Schichten_Architektur
                     FuegBuchHinzu();
                     break;
                 case ("g"):
+                    BearbeiteBuch();
                     break;
                 case ("h"):
                     EntferneBuch();
