@@ -9,168 +9,192 @@ namespace Projekt_3_Schichten_Architektur
     public class Dateihaltung : IDatenhaltung
     {
         private static XDocument xDoc;
-        private static string xDocString; 
-        
-        private string _filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+
+        private string _filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
+
         public Dateihaltung()
         {
-             _filePath = Directory.GetParent(Directory.GetParent(_filePath).FullName).FullName + @"/autoren.xml";
-            try
+            if (File.Exists(_filePath + @"/autoren.xml"))
             {
-                File.Exists(_filePath);
-                xDoc = XDocument.Load(_filePath);
-            }
-            catch (Exception e)
-            {
-                throw new FileNotFoundException("Die Datei wurde nicht gefunden.");
-            }
-        }
-
-        public void AktualisiereAutor(int ID, string Name)
-        {
-            var elementZuAendern = xDoc.Elements("Autoren")
-                .Elements("Autor")
-                .Where(x =>
+                try
                 {
-                    var autorenId = x.Element("Autoren_id");
-                    return autorenId != null && autorenId.Value == ID.ToString();
-                }).Single();
-            var nameZuAendern= elementZuAendern.Element("Name");
-            if (nameZuAendern != null)
-            {
-                nameZuAendern.Value = Name;
-            }
-            SpeicherXml();
-        }
-
-        public void AktualisiereBuch(string ISBN, string Titel)
-        {
-            var buchElement = xDoc.Elements("Autoren")
-                .Elements("Autor").Elements("Buecher").Elements("Buch")
-                .Where(x =>
+                    xDoc = XDocument.Load(_filePath + @"/autoren.xml");
+                }
+                catch (Exception ex)
                 {
-                    var buchIsbn = x.Element("ISBN");
-                    return buchIsbn != null && buchIsbn.Value == ISBN;
-                }).Single();
-            var titelZuAendern= buchElement.Element("Titel");
-            if (titelZuAendern != null)
-            {
-                titelZuAendern.Value = Titel;
+                    string s = ex.Message;
+                    xDoc = new XDocument(new XElement("Autoren"));
+                }
             }
-            SpeicherXml();
+            else
+            {
+                xDoc = new XDocument(new XElement("Autoren"));
+            }
         }
 
         public List<Autor> GetAutoren()
         {
-            var autorenList = new List<Autor>();
-            var elementAufZuListen = xDoc.Elements("Autoren").Elements("Autor");
+            List<Autor> autorenList = new List<Autor>();
 
-            autorenList = elementAufZuListen.Select(a => new Autor()
-                {
-                    Autoren_id = (int) a.Element("Autoren_id"),
-                    Name = (string)a.Element("Name"),
-                }).ToList();
+            autorenList = xDoc.Elements("Autoren").Elements("Autor").Select(a => new Autor()
+            {
+                Autoren_id = int.Parse(a.Element("Autoren_id").Value),
+                Name = a.Element("Name").Value,
+            }).ToList();
+
             return autorenList;
         }
-
         public List<Buch> GetBuecher(int Autoren_id = 0)
         {
-            var buecher = new List<Buch>();
-            IEnumerable<XElement> elementAufZuListen;
+            List<Buch> buecher = new List<Buch>();
+            IEnumerable<XElement> xAutoren;
             if (Autoren_id > 0)
             {
-                elementAufZuListen = xDoc.Elements("Autoren")
-                    .Elements("Autor")
+                xAutoren = xDoc.Elements("Autoren").Elements("Autor")
                     .Where(x =>
                     {
-                        var autorenId = x.Element("Autoren_id");
-                        return autorenId != null && autorenId.Value == Autoren_id.ToString();
+                        return int.Parse(string.IsNullOrWhiteSpace(x.Element("Autoren_id").Value) ? "0" : x.Element("Autoren_id").Value) == Autoren_id;
                     });
             }
             else
             {
-                elementAufZuListen = xDoc.Elements("Autoren")
-                    .Elements("Autor");
+                xAutoren = xDoc.Elements("Autoren").Elements("Autor");
             }
 
-            buecher = elementAufZuListen.Elements("Buecher").Elements("Buch").Select(b => new Buch()
-                {
-                    ISBN = (string)b.Element("ISBN"),
-                    Titel = (string)b.Element("Titel"),
-                }).ToList();
+            buecher = xAutoren.Elements("Buecher").Elements("Buch").Select(b => new Buch()
+            {
+                ISBN = b.Element("ISBN").Value,
+                Titel = b.Element("Titel").Value,
+            }).ToList();
+
             return buecher;
         }
 
-        public void LoescheAutor(int ID)
+        public bool AktualisiereAutor(int ID, string Name)
         {
-            var elementZuLoeschen = xDoc.Elements("Autoren")
-                .Elements("Autor")
+            XElement xAutor = xDoc.Elements("Autoren").Elements("Autor")
                 .Where(x =>
                 {
-                    var autorenId = x.Element("Autoren_id");
-                    return autorenId != null && autorenId.Value == ID.ToString();
+                    return int.Parse(string.IsNullOrWhiteSpace(x.Element("Autoren_id").Value) ? "0" : x.Element("Autoren_id").Value) == ID;
                 }).Single();
-            elementZuLoeschen.Remove();
-            SpeicherXml();
 
+            if (xAutor == null)
+            {
+                return false;
+            }
+                XElement xName = xAutor.Element("Name");
+                xName.Value = Name;
+
+            return SpeicherXml();
         }
 
-        public void LoescheBuch(string ISBN)
+        public bool AktualisiereBuch(string ISBN, string Titel)
         {
-            var buchElement = xDoc.Elements("Autoren")
-                .Elements("Autor").Elements("Buecher").Elements("Buch")
+            XElement xBuch = xDoc.Elements("Autoren").Elements("Autor").Elements("Buecher").Elements("Buch")
                 .Where(x =>
                 {
-                    var buchIsbn = x.Element("ISBN");
-                    return buchIsbn != null && buchIsbn.Value == ISBN;
+                    return x.Element("ISBN").Value == ISBN;
                 }).Single();
-            Console.WriteLine(buchElement);
-            buchElement.Remove();
-            SpeicherXml();
+
+            if (xBuch == null)
+            {
+                return false;
+            }
+                XElement xTitel = xBuch.Element("Titel");
+                xTitel.Value = Titel;
+
+            return SpeicherXml();
         }
 
-        public void SpeichereAutor(string Name)
+        public bool LoescheAutor(int ID)
         {
-            XElement autoren = xDoc.Element("Autoren");
-            var lastId = xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Last();
-            XElement neuerAutor = new XElement("Autor",
-                new XElement("Autoren_id", (int) lastId+1),
+            XElement xAutor = xDoc.Elements("Autoren").Elements("Autor")
+                .Where(x =>
+                {
+                    return int.Parse(string.IsNullOrWhiteSpace(x.Element("Autoren_id").Value) ? "0" : x.Element("Autoren_id").Value) == ID;
+                }).Single();
+
+            if (xAutor == null)
+            {
+                return false;
+            }
+            xAutor.Remove();
+
+            return SpeicherXml();
+        }
+
+        public bool LoescheBuch(string ISBN)
+        {
+            XElement xBuch = xDoc.Elements("Autoren").Elements("Autor").Elements("Buecher").Elements("Buch")
+                .Where(x =>
+                {
+                    return x.Element("ISBN").Value == ISBN;
+                }).Single();
+
+            if (xBuch == null)
+            {
+                return false;
+            }
+            xBuch.Remove();
+
+            return SpeicherXml();
+        }
+
+        public bool SpeichereAutor(string Name)
+        {
+            XElement xAutoren = xDoc.Element("Autoren");
+            int lastId = 0;
+
+            try
+            {
+                lastId = int.Parse(xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Max().Value);
+            }
+            catch (Exception ex)
+            {
+                string s = ex.Message;
+            }
+
+            XElement xAutor = new XElement("Autor",
+                new XElement("Autoren_id", lastId + 1),
                 new XElement("Name", Name),
-                new XElement("Buecher", ""));
-           autoren.Add(neuerAutor); 
-           SpeicherXml();
-            Console.WriteLine("Der Autor wurde gespeichert.");
+                new XElement("Buecher"));
+            xAutoren.Add(xAutor);
+
+            return SpeicherXml();
         }
 
-        public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
+        public bool SpeichereBuch(int Autoren_id, string ISBN, string Titel)
         {
-            var autorElement = xDoc.Elements("Autoren")
-                .Elements("Autor")
+            XElement xAutor = xDoc.Elements("Autoren").Elements("Autor")
                 .Where(x =>
                 {
-                    var autorenId = x.Element("Autoren_id");
-                    return autorenId != null && autorenId.Value == Autoren_id.ToString();
-                });
+                    return int.Parse(string.IsNullOrWhiteSpace(x.Element("Autoren_id").Value) ? "0" : x.Element("Autoren_id").Value) == Autoren_id;
+                }).Single();
+
             XElement neuesBuch = new XElement("Buch",
                 new XElement("ISBN", ISBN),
                 new XElement("Titel", Titel));
-            autorElement.Elements("Buecher").Last().Add(neuesBuch);
-            SpeicherXml();
-            Console.WriteLine("Das Buch wurde gespeichert.");
+            xAutor.Elements("Buecher").Last().Add(neuesBuch);
+
+            return SpeicherXml();
         }
 
-        private void SpeicherXml()
+        private bool SpeicherXml()
         {
+            bool b = false;
+
             try
             {
                 xDoc.Save(_filePath);
+                b = true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                // rethrow exception as DateihaltungsFehler
-                throw new DatenhaltungsFehler("Die Datei konnte nicht gespeichert werden.");
+                string s = ex.Message;
+                b = false;
             }
-            
+
+            return b;
         }
     }
 }

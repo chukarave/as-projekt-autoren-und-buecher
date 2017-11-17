@@ -14,16 +14,6 @@ namespace Projekt_3_Schichten_Architektur
 			this.Data = Data;
 		}
 
-		public void AktualisiereAutor(int ID, string Name)
-		{
-			Data.AktualisiereAutor(ID, Name);
-		}
-
-		public void AktualisiereBuch(string ISBN, string Titel)
-		{
-			Data.AktualisiereBuch(ISBN, Titel);
-		}
-
 		public List<Autor> GetAutoren()
 		{
 			return SortiereAutoren(Data.GetAutoren());
@@ -34,24 +24,34 @@ namespace Projekt_3_Schichten_Architektur
 			return Data.GetBuecher(Autoren_id);
 		}
 
-		public void LoescheAutor(int ID)
+		public bool AktualisiereAutor(int ID, string Name)
 		{
-			Data.LoescheAutor(ID);
+            return Data.AktualisiereAutor(ID, Name);
 		}
 
-		public void LoescheBuch(string ISBN)
+		public bool AktualisiereBuch(string ISBN, string Titel)
 		{
-			Data.LoescheBuch(ISBN);
+            return Data.AktualisiereBuch(ISBN, Titel);
 		}
 
-		public void SpeichereAutor(string Name)
+		public bool LoescheAutor(int ID)
 		{
-			Data.SpeichereAutor(Name);
+            return Data.LoescheAutor(ID);
 		}
 
-		public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
+		public bool LoescheBuch(string ISBN)
 		{
-			Data.SpeichereBuch(Autoren_id, ISBN, Titel);
+            return Data.LoescheBuch(ISBN);
+		}
+
+		public bool SpeichereAutor(string Name)
+		{
+            return Data.SpeichereAutor(Name);
+		}
+
+		public bool SpeichereBuch(int Autoren_id, string ISBN, string Titel)
+		{
+            return Data.SpeichereBuch(Autoren_id, ISBN, Titel);
 		}
 
 		private List<Autor> SortiereAutoren(List<Autor> Liste)

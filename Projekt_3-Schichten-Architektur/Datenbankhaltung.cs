@@ -22,27 +22,51 @@ namespace Projekt_3_Schichten_Architektur
 			Connection = new FbConnection(connectionString.ToString());
 		}
 
-		public void AktualisiereAutor(int ID, string Name)
+		~Datenbankhaltung()
 		{
+			if (Connection == null)
+				return;
+
+			if (Connection.State == System.Data.ConnectionState.Open)
+			{
+				try
+				{
+					Connection.Close();
+				}
+				catch (NullReferenceException n)
+				{
+					throw new NullReferenceException("Verbindung zur Datenbank konnte nicht beendet werden.", n);
+				}
+			}
+		}
+
+		public bool AktualisiereAutor(int ID, string Name)
+		{
+			if (string.IsNullOrEmpty(Name))
+				return false;
+
 			string statement = "UPDATE T_Autoren SET ";
 			statement += "Name = '" + Name + "' ";
 			statement += "WHERE ";
 			statement += "Autoren_id = " + ID + ";";
 
-			StatementAusfuehren(statement);
+			return StatementAusfuehren(statement);
 		}
 
-		public void AktualisiereBuch(string ISBN, string Titel)
+		public bool AktualisiereBuch(string ISBN, string Titel)
 		{
+			if (string.IsNullOrEmpty(Titel))
+				return false;
+
 			string statement = "UPDATE T_Buecher SET ";
 			statement += "(Titel = '" + Titel + "') ";
 			statement += "WHERE ";
 			statement += "ISBN = '" + ISBN + "';";
 
-			StatementAusfuehren(statement);
+			return StatementAusfuehren(statement);
 		}
 
-		public List<Autor> GetAutoren()
+		public void VerbindungOeffnen()
 		{
 			if (Connection == null)
 				throw new NullReferenceException("Verbindung zur Datenbank fehlgechlagen.");
@@ -53,16 +77,21 @@ namespace Projekt_3_Schichten_Architektur
 				{
 					Connection.Open();
 				}
-				catch
+				catch (NullReferenceException n)
 				{
-					throw new NullReferenceException("Verbindung zur Datenbank fehlgeschlagen.");
+					throw new NullReferenceException("Verbindung zur Datenbank fehlgeschlagen.", n);
 				}
 			}
+		}
+
+		public List<Autor> GetAutoren()
+		{
+			VerbindungOeffnen();
 
 			string statement = "SELECT * " +
 								"FROM T_Autoren";
 
-			FbCommand reader = new FbCommand(statement);
+			FbCommand reader = new FbCommand(statement, Connection);
 			FbDataAdapter adapter = new FbDataAdapter(reader);
 			DataSet Data = new DataSet();
 			adapter.FillSchema(Data, SchemaType.Source);
@@ -77,22 +106,9 @@ namespace Projekt_3_Schichten_Architektur
 			return autoren;
 		}
 
-		public List<Buch> GetBuecher(int Autoren_id = 0)
+		public List<Buch> GetBuecher(int Autoren_id = -1)
 		{
-			if (Connection == null)
-				throw new NullReferenceException("Verbindung zur Datenbank fehlgechlagen.");
-
-			if (Connection.State != System.Data.ConnectionState.Open)
-			{
-				try
-				{
-					Connection.Open();
-				}
-				catch
-				{
-					throw new NullReferenceException("Verbindung zur Datenbank fehlgeschlagen.");
-				}
-			}
+			VerbindungOeffnen();
 
 			string statement = "SELECT * " +
 								"FROM T_Buecher ";
@@ -100,7 +116,7 @@ namespace Projekt_3_Schichten_Architektur
 			if (Autoren_id >= 0)
 				statement += "WHERE F_Autoren_id = " + Autoren_id;
 
-			FbCommand reader = new FbCommand(statement);
+			FbCommand reader = new FbCommand(statement, Connection);
 			FbDataAdapter adapter = new FbDataAdapter(reader);
 			DataSet Data = new DataSet();
 			adapter.FillSchema(Data, SchemaType.Source);
@@ -115,55 +131,61 @@ namespace Projekt_3_Schichten_Architektur
 			return buecher;
 		}
 
-		public void LoescheAutor(int ID)
+		public bool LoescheAutor(int ID)
 		{
 			string statement = "DELETE FROM T_Autoren ";
 			statement += "WHERE Autoren_id = " + ID + ";";
 
-			StatementAusfuehren(statement);
+			return StatementAusfuehren(statement);
 		}
 
-		public void LoescheBuch(string ISBN)
+		public bool LoescheBuch(string ISBN)
 		{
 			string statement = "DELETE FROM T_Buecher ";
 			statement += "WHERE ISBN = '" + ISBN + "';";
 
-			StatementAusfuehren(statement);
+			return StatementAusfuehren(statement);
 		}
 
-		public void SpeichereAutor(string Name)
+		public bool SpeichereAutor(string Name)
 		{
+			if (string.IsNullOrEmpty(Name))
+				return false;
+
 			string statement = "INSERT INTO T_Autoren ";
 			statement += "(Name) ";
 			statement += "VALUES ";
-			statement += "(" + Name + ");";
+			statement += "('" + Name + "');";
 
-			StatementAusfuehren(statement);
+			return StatementAusfuehren(statement);
 		}
 
-		public void SpeichereBuch(int Autoren_id, string ISBN, string Titel)
+		public bool SpeichereBuch(int Autoren_id, string ISBN, string Titel)
 		{
+			if (string.IsNullOrEmpty(Titel))
+				return false;
+
 			string statement = "INSERT INTO T_Buecher ";
-			statement += "(Autoren_id, ISBN, Titel) ";
+			statement += "(F_Autoren_id, ISBN, Titel) ";
 			statement += "VALUES ";
-			statement += "(" + Autoren_id + ", " + ISBN + ", " + Titel + ");";
+			statement += "(" + Autoren_id + ", '" + ISBN + "', '" + Titel + "');";
 
-			StatementAusfuehren(statement);
+			return StatementAusfuehren(statement);
 		}
 
-		private void StatementAusfuehren(string Statement)
+		private bool StatementAusfuehren(string Statement)
 		{
+			VerbindungOeffnen();
+
+			bool b = false;
 			FbCommand writer = null;
 			try
 			{
-				writer = new FbCommand();
-				writer.Connection = Connection;
-				writer.Transaction = writer.Connection.BeginTransaction();
-
-				writer.CommandText = Statement;
+				writer = new FbCommand(Statement, Connection, Connection.BeginTransaction());
 				writer.ExecuteNonQuery();
 
 				writer.Transaction.Commit();
+				b = true;
 			}
 			catch
 			{
@@ -173,6 +195,7 @@ namespace Projekt_3_Schichten_Architektur
 			{
 				writer?.Connection?.Close();
 			}
+			return b;
 		}
 	}
 }

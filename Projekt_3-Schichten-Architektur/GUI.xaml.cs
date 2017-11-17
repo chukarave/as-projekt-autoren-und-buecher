@@ -26,5 +26,45 @@ namespace Projekt_3_Schichten_Architektur
             this.IF = _IF;
             this.Show();
         }
+
+        private void lstAuthors_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IF.GetBuecher();
+        }
+
+        private void btnAllBooks_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnAddAuthor_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnSaveAuthor_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnDeleteAuthor_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnAddBook_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnSaveBook_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnDeleteBook_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
