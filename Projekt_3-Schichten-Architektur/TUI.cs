@@ -1,4 +1,7 @@
-﻿using System;
+﻿﻿using System;
+ using System.Data.Common;
+ using System.Linq;
+ using System.Net.Mime;
 
 namespace Projekt_3_Schichten_Architektur
 {
@@ -36,11 +39,6 @@ namespace Projekt_3_Schichten_Architektur
                 }
 
             }
-            catch (DatenhaltungsFehler e)
-            {
-                Console.WriteLine("Fehler ist aufgetreten. Programm wird beendet!");
-                return true;
-            }
             catch (Exception ex)
             {
                 Console.WriteLine("Unerwarteter Fehler ist aufgetreten. Programm wird beendet!");
@@ -63,11 +61,12 @@ namespace Projekt_3_Schichten_Architektur
             Console.WriteLine("│ Autoren entfernen             (d) │");
             Console.WriteLine("│ -----------------------           │");
             Console.WriteLine("│ Bücher auflisten              (e) │");
-            Console.WriteLine("│ Bücher hinzufügen             (f) │");
-            Console.WriteLine("│ Bücher bearbeiten             (g) │");
-            Console.WriteLine("│ Bücher entfernen              (h) │");
+            Console.WriteLine("│ Bücher auflisten nach Autor   (f) │");
+            Console.WriteLine("│ Bücher hinzufügen             (g) │");
+            Console.WriteLine("│ Bücher bearbeiten             (h) │");
+            Console.WriteLine("│ Bücher entfernen              (i) │");
             Console.WriteLine("│ -----------------------           │");
-            Console.WriteLine("│ Program beenden               (i) │");
+            Console.WriteLine("│ Program beenden               (j) │");
             Console.WriteLine("├───────────────────────────────────┤");
             Console.WriteLine("└───────────────────────────────────┘");
         }
@@ -86,26 +85,6 @@ namespace Projekt_3_Schichten_Architektur
             return input;
         }
 
-        public string FragWeitereAutorAktion()
-        {
-            Console.WriteLine();
-            Console.WriteLine("┌──────────────────────────────────────┐");
-            Console.WriteLine("│ Autoren Menü                         │");
-            Console.WriteLine("├──────────────────────────────────────┤");
-            Console.WriteLine("│ Autoren hinzufügen               (b) │");
-            Console.WriteLine("│ Autoren bearbeiten               (c) │");
-            Console.WriteLine("│ Autoren entfernen                (d) │");
-            Console.WriteLine("│ -----------------------              │");
-            Console.WriteLine("│ Bücher auflisten nach Autor      (e) │");
-            Console.WriteLine("│ Hauptmenü zeigen                 (m) │");
-            Console.WriteLine("│ Program beenden                  (i) │");
-            Console.WriteLine("├──────────────────────────────────────┤");
-            Console.WriteLine("└──────────────────────────────────────┘");
-            var input = Console.ReadLine();
-			Console.Clear();
-            return input;
-        }
-
         public bool ZeigeAutoren()
         {
             Console.WriteLine();
@@ -119,27 +98,22 @@ namespace Projekt_3_Schichten_Architektur
                 Console.WriteLine(autor.Autoren_id + ". " + autor.Name);
             }
             Console.WriteLine();
-            var ret = FragWeitereAutorAktion();
-            switch (ret)
+            return false;
+        }
+
+        public bool ZeigeBuecher()
+        {
+            Console.WriteLine();
+            var buecherIndex = IF.GetBuecher(0);
+            if (!buecherIndex.Any())
             {
-                case ("b"):
-                    FuegAutorHinzu();
-                    break;
-                case ("c"):
-                    BearbeiteAutor();
-                    break;
-                case ("d"):
-                    EntferneAutor();
-                    break;
-                case ("e"):
-                    BuecherNachAutor();
-                    break;
-                case ("m"):
-                    ZeigeHauptMenue();
-                    break;
-                case ("i"):
-                    return true;
+                Console.WriteLine("Die Bücherliste ist leer");
             }
+            foreach (var buch in buecherIndex)
+            {
+                Console.WriteLine(buch.Titel + " (ISBN: " + buch.ISBN + ")");
+            }
+            Console.WriteLine();
             return false;
         }
 
@@ -173,16 +147,17 @@ namespace Projekt_3_Schichten_Architektur
             {
                 Console.WriteLine("ID: " + autor.Autoren_id + " Name: " + autor.Name);
 			}
-			Console.ReadLine();
+		  // Console.ReadLine();
 			Console.WriteLine("Bitte geben Sie die ID Nummer von einem Autor ein, um ein neues Buch für diesen Autor hinzufügen: ");
 			var id = Convert.ToInt32(Console.ReadLine());
-            Console.ReadLine();
+          //  Console.ReadLine();
             Console.WriteLine("Bitte Geben Sie den Titel ein: ");
             var titel = Console.ReadLine();
-            Console.ReadLine();
+          //  Console.ReadLine();
             Console.WriteLine("Bitte Geben Sie die ISBN ein: ");
             var isbn = Console.ReadLine();
             IF.SpeichereBuch(id, isbn, titel);
+            Console.WriteLine("Das Buch wurde hinzugefügt.");
             return false;
         }
 
@@ -281,10 +256,7 @@ namespace Projekt_3_Schichten_Architektur
             switch (input)
             {
                 case ("a"):
-                    if (ZeigeAutoren())
-                    {
-                        return true;
-                    }
+                    ZeigeAutoren();
                     break;
                 case ("b"):
                     FuegAutorHinzu();
@@ -296,18 +268,21 @@ namespace Projekt_3_Schichten_Architektur
                     EntferneAutor();
                     break;
                 case ("e"):
-                    BuecherNachAutor();
+                    ZeigeBuecher();
                     break;
                 case ("f"):
-                    FuegBuchHinzu();
+                    BuecherNachAutor();
                     break;
                 case ("g"):
-                    BearbeiteBuch();
+                    FuegBuchHinzu();
                     break;
                 case ("h"):
-                    EntferneBuch();
+                    BearbeiteBuch();
                     break;
                 case ("i"):
+                    EntferneBuch();
+                    break;
+                case ("j"):
                     break;
                 
             }
