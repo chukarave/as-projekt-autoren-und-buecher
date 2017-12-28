@@ -32,7 +32,7 @@ namespace Projekt_3_Schichten_Architektur
                 ZeigeMenue();
                 var auswahl = FragEingabe();
 				Console.Clear();
-				if (auswahl != "i") {
+				if (auswahl != "j") {
                     return Select(auswahl);
                 } else {
                     return true;
@@ -163,7 +163,6 @@ namespace Projekt_3_Schichten_Architektur
 
         public bool FuegAutorHinzu()
         {
-            Console.ReadLine();
             Console.WriteLine("Bitte Geben Sie den Autor Name ein: ");
             var autorName = Console.ReadLine();
             IF.SpeichereAutor(autorName);
