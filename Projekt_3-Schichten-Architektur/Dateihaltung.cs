@@ -144,9 +144,9 @@ namespace Projekt_3_Schichten_Architektur
         {
             XElement xAutoren = xDoc.Element("Autoren");
             // Removed try/catch block as lastid was unusable from inside it
-            int lastId = int.Parse(xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Max().Value);
+            XElement lastId = xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Last(); 
             XElement xAutor = new XElement("Autor",
-                new XElement("Autoren_id", lastId + 1),
+                new XElement("Autoren_id", (int) lastId + 1),
                 new XElement("Name", Name),
                 new XElement("Buecher"));
             xAutoren.Add(xAutor);
