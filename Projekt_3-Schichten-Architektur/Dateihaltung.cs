@@ -11,7 +11,7 @@ namespace Projekt_3_Schichten_Architektur
         private static XDocument xDoc;
 
         private string _filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
-
+        
         public Dateihaltung()
         {
             if (File.Exists(_filePath + @"/autoren.xml"))
@@ -143,17 +143,8 @@ namespace Projekt_3_Schichten_Architektur
         public bool SpeichereAutor(string Name)
         {
             XElement xAutoren = xDoc.Element("Autoren");
-            int lastId = 0;
-
-            try
-            {
-                lastId = int.Parse(xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Max().Value);
-            }
-            catch (Exception ex)
-            {
-                string s = ex.Message;
-            }
-
+            // Removed try/catch block as lastid was unusable from inside it
+            int lastId = int.Parse(xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Max().Value);
             XElement xAutor = new XElement("Autor",
                 new XElement("Autoren_id", lastId + 1),
                 new XElement("Name", Name),
