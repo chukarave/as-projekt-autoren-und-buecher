@@ -82,7 +82,6 @@
     <Compile Include="Buch.cs" />
     <Compile Include="Dateihaltung.cs" />
     <Compile Include="Datenbankhaltung.cs" />
-    <Compile Include="DatenhaltungsFehler.cs" />
     <Compile Include="Fachkonzept1.cs" />
     <Compile Include="Fachkonzept2.cs" />
     <Compile Include="IDatenhaltung.cs" />
