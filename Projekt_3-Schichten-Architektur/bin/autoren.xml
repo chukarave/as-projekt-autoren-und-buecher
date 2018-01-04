@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Autoren>
+  <Autor>
+    <Autoren_id>1</Autoren_id>
+    <Name>Goethe</Name>
+    <Buecher />
+  </Autor>
+</Autoren>
