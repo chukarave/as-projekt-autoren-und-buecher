@@ -25,7 +25,7 @@ namespace Projekt_3_Schichten_Architektur
             GUI myGUI;
             TUI myTUI;
 
-            int i = 1;
+            int i = 2;
 
             switch (i)
             {

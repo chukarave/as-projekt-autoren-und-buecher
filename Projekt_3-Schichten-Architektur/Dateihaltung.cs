@@ -11,7 +11,7 @@ namespace Projekt_3_Schichten_Architektur
         private static XDocument xDoc;
 
         private string _filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
-        
+
         public Dateihaltung()
         {
             if (File.Exists(_filePath + @"/autoren.xml"))
@@ -82,8 +82,8 @@ namespace Projekt_3_Schichten_Architektur
             {
                 return false;
             }
-                XElement xName = xAutor.Element("Name");
-                xName.Value = Name;
+            XElement xName = xAutor.Element("Name");
+            xName.Value = Name;
 
             return SpeicherXml();
         }
@@ -100,8 +100,8 @@ namespace Projekt_3_Schichten_Architektur
             {
                 return false;
             }
-                XElement xTitel = xBuch.Element("Titel");
-                xTitel.Value = Titel;
+            XElement xTitel = xBuch.Element("Titel");
+            xTitel.Value = Titel;
 
             return SpeicherXml();
         }
@@ -142,11 +142,15 @@ namespace Projekt_3_Schichten_Architektur
 
         public bool SpeichereAutor(string Name)
         {
+            int lastId;
+
             XElement xAutoren = xDoc.Element("Autoren");
-            // Removed try/catch block as lastid was unusable from inside it
-            XElement lastId = xDoc.Descendants("Autoren").Descendants("Autor").Elements("Autoren_id").Last(); 
+            if (xDoc.Elements("Autoren").Descendants("Autor").Count() > 0)
+                lastId = xDoc.Descendants("Autoren").Descendants("Autor").Descendants("Autoren_id").Max(x => (int)x);
+            else
+                lastId = 0;
             XElement xAutor = new XElement("Autor",
-                new XElement("Autoren_id", (int) lastId + 1),
+                new XElement("Autoren_id", lastId + 1),
                 new XElement("Name", Name),
                 new XElement("Buecher"));
             xAutoren.Add(xAutor);
@@ -176,7 +180,7 @@ namespace Projekt_3_Schichten_Architektur
 
             try
             {
-                xDoc.Save(_filePath);
+                xDoc.Save(_filePath + @"/autoren.xml");
                 b = true;
             }
             catch (Exception ex)

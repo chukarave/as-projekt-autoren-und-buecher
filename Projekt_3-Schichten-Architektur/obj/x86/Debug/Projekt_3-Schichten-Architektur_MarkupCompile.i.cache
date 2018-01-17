@@ -4,7 +4,7 @@
 winexe
 C#
 .cs
-E:\Berufsschule\Projekt_3-Schichten-Architektur_Nowi_Menzel_Rave\as-projekt-autoren-und-buecher-master\Projekt_3-Schichten-Architektur\obj\Debug\
+E:\Berufsschule\Projekt_3-Schichten-Architektur_Nowi_Menzel_Rave\as-projekt-autoren-und-buecher-master\Projekt_3-Schichten-Architektur\obj\x86\Debug\
 Projekt_3_Schichten_Architektur
 none
 false
@@ -12,9 +12,9 @@ DEBUG;TRACE
 E:\Berufsschule\Projekt_3-Schichten-Architektur_Nowi_Menzel_Rave\as-projekt-autoren-und-buecher-master\Projekt_3-Schichten-Architektur\App.xaml
 2-1345618472
 1-751606363
-16111880358
+20-786407105
 14-1768018520
 GUI.xaml;MainWindow.xaml;
 
-False
+True
 

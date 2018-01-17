@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Autoren>
+  <Autor>
+    <Autoren_id>1</Autoren_id>
+    <Name>Goethe</Name>
+    <Buecher />
+  </Autor>
+  <Autor>
+    <Autoren_id>2</Autoren_id>
+    <Name>Autor</Name>
+    <Buecher />
+  </Autor>
+  <Autor>
+    <Autoren_id>3</Autoren_id>
+    <Name>Autor2</Name>
+    <Buecher />
+  </Autor>
+  <Autor>
+    <Autoren_id>4</Autoren_id>
+    <Name>AutorX</Name>
+    <Buecher />
+  </Autor>
+  <Autor>
+    <Autoren_id>5</Autoren_id>
+    <Name>AutorWurst</Name>
+    <Buecher />
+  </Autor>
+  <Autor>
+    <Autoren_id>6</Autoren_id>
+    <Name>Werner</Name>
+    <Buecher />
+  </Autor>
+</Autoren>

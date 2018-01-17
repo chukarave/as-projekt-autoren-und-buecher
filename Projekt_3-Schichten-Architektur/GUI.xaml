@@ -8,7 +8,7 @@
         Title="GUI" Height="353.425" Width="638.35">
     <Grid>
         <ListBox x:Name="lstAuthors" Margin="136,10,0,0" Height="264" VerticalAlignment="Top" HorizontalAlignment="Left" Width="176" SelectionChanged="lstAuthors_SelectionChanged"/>
-        <TextBox x:Name="txtAuthorID" Height="23" TextWrapping="Wrap" Text="" Margin="10,37,0,0" HorizontalAlignment="Left" Width="72" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtAuthorID" Height="23" TextWrapping="Wrap" Text="" Margin="10,37,0,0" IsEnabled="False" HorizontalAlignment="Left" Width="72" VerticalAlignment="Top"/>
         <TextBox x:Name="txtAuthorName" Height="23" TextWrapping="Wrap" Text="" Width="121" Margin="10,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Content="Autoren-ID:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" Height="26"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" Height="29" RenderTransformOrigin="0.526,-0.508"/>
@@ -16,8 +16,8 @@
         <Button x:Name="btnSaveAuthor" Content="Speichern" Margin="10,176,0,0" Width="121" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnSaveAuthor_Click"/>
         <Button x:Name="btnDeleteAuthor" Content="Löschen" Margin="10,207,0,0" Width="121" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnDeleteAuthor_Click"/>
 
-        <ListBox x:Name="lstBooks" Margin="317,10,0,0" Height="264" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177"/>
-        <TextBox x:Name="txtBookISBN" Height="23" TextWrapping="Wrap" Text="" Margin="499,37,0,0" IsEnabled="False" HorizontalAlignment="Left" Width="121" VerticalAlignment="Top"/>
+        <ListBox x:Name="lstBooks" Margin="317,10,0,0" Height="264" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" SelectionChanged="lstBooks_SelectionChanged"/>
+        <TextBox x:Name="txtBookISBN" Height="23" TextWrapping="Wrap" Text="" Margin="499,37,0,0" HorizontalAlignment="Left" Width="121" VerticalAlignment="Top"/>
         <TextBox x:Name="txtBookTitle" Height="23" TextWrapping="Wrap" Text="" Width="121" Margin="499,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label Content="ISBN:" HorizontalAlignment="Left" Margin="499,11,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="3.488,0.342"/>
         <Label Content="Titel:" HorizontalAlignment="Left" Margin="499,70,0,0" VerticalAlignment="Top" Height="29" RenderTransformOrigin="0.526,-0.508"/>

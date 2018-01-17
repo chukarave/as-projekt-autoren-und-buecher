@@ -59,10 +59,10 @@ namespace Projekt_3_Schichten_Architektur
 				return false;
 
 			string statement = "UPDATE T_Buecher SET ";
-			statement += "(Titel = '" + Titel + "') ";
+			statement += "Titel = '" + Titel + "' ";
 			statement += "WHERE ";
 			statement += "ISBN = '" + ISBN + "';";
-
+            Console.WriteLine(statement);
 			return StatementAusfuehren(statement);
 		}
 
@@ -106,14 +106,14 @@ namespace Projekt_3_Schichten_Architektur
 			return autoren;
 		}
 
-		public List<Buch> GetBuecher(int Autoren_id = -1)
+		public List<Buch> GetBuecher(int Autoren_id = 0)
 		{
 			VerbindungOeffnen();
 
 			string statement = "SELECT * " +
 								"FROM T_Buecher ";
 
-			if (Autoren_id >= 0)
+			if (Autoren_id > 0)
 				statement += "WHERE F_Autoren_id = " + Autoren_id;
 
 			FbCommand reader = new FbCommand(statement, Connection);
